@@ -8,6 +8,7 @@ install:
   - echo exit 101 | sudo tee /usr/sbin/policy-rc.d
   - sudo chmod +x /usr/sbin/policy-rc.d
   - sudo apt-get install -y slirp lxc lxc-docker aufs-tools cgroup-lite
+  - bundle install --deployment
 
 rvm:
 - 2.0.0
