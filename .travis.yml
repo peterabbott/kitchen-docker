@@ -12,7 +12,7 @@ install:
   - curl -sLo linux https://github.com/jpetazzo/sekexe/raw/master/uml
   - chmod +x linux
   - curl -sL https://raw.githubusercontent.com/lukecyca/travis-docker-example/master/uml.sh | sed '/^docker run ubuntu\(.*\)/d' > travis-run.sh
-  - echo "docker run ubuntu bash -c 'bundle rake' " >> travis-run.sh
+  - echo "docker run ubuntu bash -c 'kitchen list' " >> travis-run.sh
   - chmod +x travis-run.sh
 
 
