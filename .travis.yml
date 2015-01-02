@@ -11,8 +11,10 @@ install:
   - sudo apt-get install -y slirp lxc lxc-docker aufs-tools cgroup-lite
   - curl -sLo linux https://github.com/jpetazzo/sekexe/raw/master/uml
   - chmod +x linux
-  - curl -sLo travis-init.sh https://raw.githubusercontent.com/lukecyca/travis-docker-example/master/uml.sh
-  - chmod +x travis-init.sh
+  - curl -sL https://raw.githubusercontent.com/lukecyca/travis-docker-example/master/uml.sh | sed '/^docker run ubuntu\(.*\)/d' > travis-run.sh
+  - echo "docker run ubuntu bash -c 'bundle rake' " >> travis-run.sh
+  - chmod +x travis-run.sh
+
 
 script: ./linux quiet mem=2G rootfstype=hostfs rw eth0=slirp,,/usr/bin/slirp-fullbolt init=$(pwd)/travis-init.sh WORKDIR=$(pwd) HOME=$HOME
 
