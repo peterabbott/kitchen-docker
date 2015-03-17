@@ -102,6 +102,7 @@ module Kitchen
           sleep 1
           wait_for_sshd(state[:hostname], nil, :port => state[:port])
         end
+        logger.info("Created Container: #{state[:container_id]}")
       end
 
       def wait_for_container(state)
@@ -117,6 +118,7 @@ module Kitchen
         if config[:remove_images] && state[:image_id]
           rm_image(state)
         end
+        logger.info("Removed Container: #{state[:container_id]}") if !state[:image_id].nil?
       end
 
       def remote_socket?
@@ -137,7 +139,7 @@ module Kitchen
         docker << " --tlscacert=#{config[:tls_cacert]}" if config[:tls_cacert]
         docker << " --tlscert=#{config[:tls_cert]}" if config[:tls_cert]
         docker << " --tlskey=#{config[:tls_key]}" if config[:tls_key]
-        run_command("#{docker} #{cmd} 2>&1", options.merge(:quiet => !logger.debug?))
+        run_silently("#{docker} #{cmd} 2>&1", options)
       end
 
       def build_dockerfile
@@ -318,6 +320,13 @@ module Kitchen
       def version_above?(version)
         docker_version = docker_command('--version').split(',').first.scan(/\d+/).join('.')
         Gem::Version.new(docker_version) >= Gem::Version.new(version)
+      end
+
+      def run_silently(cmd, options = {})
+        merged = {
+          :live_stream => nil, :quiet => (logger.debug? ? false : true)
+        }.merge(options)
+        run_command(cmd, merged)
       end
     end
   end
